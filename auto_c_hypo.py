@@ -1,26 +1,24 @@
 #imports
 from nltk.corpus import wordnet as wn
-import re
 
 #bank
 words = []
 
-#parsing utilities
-def return_words_one(entry):
-    h_bank = []
-    h_bank.append(str(entry))
-    regex = r'\w+'
-    result = re.findall(regex, h_bank[0])
-    print result[1]+',',
+#helpers
+def word_list_without_duplicates(word_list):
+    # remove duplicates by putting in a set
+    word_list = set(word_list)
+    # join word_list together with commas
+    return ', '.join(word_list)
 
-def return_words_two(entry):
-    h_bank = []
-    h_bank.append(str(lemma))
-    regex = r'\w+'
-    result = re.findall(regex, h_bank[0])
-    print result[1]+',',
-    print result[4]+',',
-
+def related_synsets(synset):
+    return (
+        synset.hyponyms() +
+        synset.part_holonyms() +
+        synset.substance_holonyms() +
+        synset.part_meronyms() +
+        synset.substance_meronyms()
+    )
 
 #loop
 while True:
@@ -32,54 +30,36 @@ while True:
     split_input = input_text.split()
     print " "
     for word in split_input:
-        try:
-            print "--"+word.upper()+"--NOUN--",
-            ss = wn.synsets(word, 'n')
-            for i in ss:
-                for entry in i.hyponyms():
-                    return_words_one(entry)
-                for entry in i.part_holonyms():
-                    return_words_one(entry)
-                for entry in i.substance_holonyms():
-                    return_words_one(entry)
-                for entry in i.part_meronyms():
-                    return_words_one(entry)
-                for entry in i.substance_meronyms():
-                    return_words_one(entry)
-        except IndexError:
-            pass
-        try:
-            print "--"+word.upper()+"--VERB--",
-            ss = wn.synsets(word, 'v')
-            for i in ss:
-                for entry in i.hyponyms():
-                    return_words_one(entry)
-                for entry in i.part_holonyms():
-                    return_words_one(entry)
-                for entry in i.substance_holonyms():
-                    return_words_one(entry)
-                for entry in i.part_meronyms():
-                    return_words_one(entry)
-                for entry in i.substance_meronyms():
-                    return_words_one(entry)
-        except IndexError:
-            pass
-        try:
-            print "--"+word.upper()+"--ADJ--",
-            token_a = wn.synsets(word, 'a')
-            for i in token_a:
-                for lemma in i.lemmas():
-                    return_words_two(entry)
-        except IndexError:
-            pass
-        try:
-            print "--"+word.upper()+"--ADV--",
-            token_r = wn.synsets(word, 'r')
-            for i in token_r:
-                for lemma in i.lemmas():
-                    return_words_two(entry)
-        except IndexError:
-            pass
+        print "--"+word.upper()+"--NOUN--",
+        synsets = wn.synsets(word, 'n')
+        lemma_names = []
+        for synset in synsets:
+            for entry in related_synsets(synset):
+                lemma_names += entry.lemma_names()
+        print word_list_without_duplicates(lemma_names),
+
+        print "--"+word.upper()+"--VERB--",
+        synsets = wn.synsets(word, 'v')
+        lemma_names = []
+        for synset in synsets:
+            for entry in related_synsets(synset):
+                lemma_names += entry.lemma_names()
+        print word_list_without_duplicates(lemma_names),
+
+        print "--"+word.upper()+"--ADJ--",
+        token_a = wn.synsets(word, 'a')
+        lemma_names = []
+        for entry in token_a:
+            lemma_names += entry.lemma_names()
+        print word_list_without_duplicates(lemma_names),
+
+        print "--"+word.upper()+"--ADV--",
+        token_r = wn.synsets(word, 'r')
+        lemma_names = []
+        for entry in token_r:
+            lemma_names += entry.lemma_names()
+        print word_list_without_duplicates(lemma_names),
+
         print " "
         print " "
 
