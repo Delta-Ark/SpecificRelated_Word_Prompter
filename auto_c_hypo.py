@@ -4,7 +4,6 @@ import re
 
 #bank
 words = []
-joined = " "
 
 #parsing utilities
 def return_words_one(entry):
