@@ -26,10 +26,10 @@ def return_words_two(entry):
 while True:
 
     #input system
-    input = raw_input("analyze: ")
+    input_text = raw_input("analyze: ")
 
     #analyzer
-    split_input = input.split()
+    split_input = input_text.split()
     print " "
     for word in split_input:
         try:
@@ -91,7 +91,7 @@ while True:
     print words
 
     #exiter
-    if input == "  ":
+    if input_text == "  ":
         print " "
         print " ".join(words)
         print " "
