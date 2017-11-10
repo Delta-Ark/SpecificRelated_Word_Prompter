@@ -24,8 +24,7 @@ def return_words_two(entry):
 
 
 #loop
-loop = 1
-while loop == 1:
+while True:
 
     #input system
     input = raw_input("analyze: ")
@@ -97,4 +96,4 @@ while loop == 1:
         print " "
         print " ".join(words)
         print " "
-        loop = 0
+        break
